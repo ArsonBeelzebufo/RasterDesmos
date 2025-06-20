@@ -1,6 +1,10 @@
 import dotenv
 import os
 
+def bmp(bmpPath):
+    with open(bmpPath,'rb') as file:
+        pass
+
 def polygonize(*pixel): #x,y,rgba
     x=pixel[0]
     y=-pixel[1]
@@ -22,7 +26,4 @@ def equatize(colorArray):
     return eqs+'\n'+cEq+'\n'+oEq
 
 dotenv.load_dotenv()
-filepath=os.getenv("BMPPath")
-with open(filepath,'rb') as file:
-    content=file.read()
-    fileHead=content[:14]
+filepath=os.getenv("RasterPath")
