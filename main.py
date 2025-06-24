@@ -1,9 +1,29 @@
 import dotenv
 import os
 
-def bmp(bmpPath):
+def bmp(bmpPath): #assumes BITMAPINFOHEADER, V4, or V5
     with open(bmpPath,'rb') as file:
-        pass
+        content=file.read()
+        with open("out.txt",'w') as file:
+            file.write(' '.join([str(content[i]) for i in range(len(content))]))
+        DIB=int.from_bytes(content[14:18],byteorder='little')
+        wPixels=int.from_bytes(content[18:22],byteorder='little')
+        hPixels=int.from_bytes(content[22:26],byteorder='little')
+        bitsPerPixel=int.from_bytes(content[28:30],byteorder='little')
+        compression=content[30:34]
+        print(compression)
+        if DIB>40:
+            colorspace=content[70:74].decode('ascii')
+            print(colorspace)
+            if compression==b'\x03\x00\x00\x00':
+                rMask=content[54:58]
+                gMask=content[58:62]
+                bMask=content[62:66]
+                aMask=content[66:70]
+            if colorspace=='':
+                rGamma=content[110:114]
+                gGamma=content[114:118]
+                bGamma=content[118:122]
 
 def polygonize(*pixel): #x,y,rgba
     x=pixel[0]
@@ -27,3 +47,4 @@ def equatize(colorArray):
 
 dotenv.load_dotenv()
 filepath=os.getenv("RasterPath")
+bmp(filepath)
